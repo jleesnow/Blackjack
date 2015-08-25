@@ -112,27 +112,29 @@ public class BlackJack extends GraphicsProgram {
     /**
      *  Write the showScore method.
      *  Display the score of a particular hand.
-     *  @param hand the Hand to score.
+     *  @param playerHand the Hand to score.
+     *  @param dealerHand the Hand to score.
      */
-    public void showScore(Hand hand) {
-        int score = hand.evalHand();
+    public void showScore(Hand playerHand, Hand dealerHand) {
+        int playerScore = playerHand.evalHand();
+        int dealerScore = dealerHand.evalHand();
 
-        if (score == 21) {
+        if (playerScore == 21) {
             statusLbl.setText("Blackjack! You Won!");
             dealHandBtn.setEnabled(true);
             hitBtn.setEnabled(false);
             standBtn.setEnabled(false);
 
         }
-        else if (score > 21) {
-            statusLbl.setText("Sorry, you busted! Score is " + score);
+        else if (playerScore > 21) {
+            statusLbl.setText("Sorry, you busted! Score is " + playerScore);
             dealHandBtn.setEnabled(true);
             hitBtn.setEnabled(false);
             standBtn.setEnabled(false);
 
         }
         else {
-            statusLbl.setText("Score is " + score + ". Hit or Stand?");
+            statusLbl.setText("Score is " + playerScore + ". Dealer score is " + dealerScore + ". Hit or Stand?");
             dealHandBtn.setEnabled(false);
             hitBtn.setEnabled(true);
             standBtn.setEnabled(true);
@@ -150,10 +152,16 @@ public class BlackJack extends GraphicsProgram {
                 newDeck();
             }
             player = new BlackJackHand();
+            dealer = new BlackJackHand();
+
             player.addCard(deck.dealCard());
             player.addCard(deck.dealCard());
+            dealer.addCard(deck.dealCard());
+            dealer.addCard(deck.dealCard());
+
             showCards(player, playerPile);
-            showScore(player);
+            showCards(dealer, dealerPile);
+            showScore(player, dealer);
         }
     }
 
@@ -172,7 +180,7 @@ public class BlackJack extends GraphicsProgram {
 
         // Initialize the three JLabels
         logoLbl = new JLabel(new ImageIcon("cards/21.gif"));
-        statusLbl = new JLabel("Welcome to Beginner's Blackjack");
+        statusLbl = new JLabel("Welcome to Blackjack");
 
         // Add your labels to the program's surface.
         add(logoLbl, NORTH);
@@ -198,7 +206,7 @@ public class BlackJack extends GraphicsProgram {
                 }
                 player.addCard(deck.dealCard());
                 showCards(player, playerPile);
-                showScore(player);
+                showScore(player, dealer);
             }
         });
 
